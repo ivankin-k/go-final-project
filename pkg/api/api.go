@@ -3,7 +3,6 @@ package api
 import (
 	"log"
 	"net/http"
-	"time"
 )
 
 const dateFormat = "20060102"
@@ -22,12 +21,4 @@ func Init() {
 		log.Println("Authentication enabled")
 		http.HandleFunc("POST /api/signin", signInHandler)
 	}
-}
-
-// Compare dates
-func after(a, b time.Time) bool {
-	if a.Truncate(24 * time.Hour).After(b.Truncate(24 * time.Hour)) {
-		return true
-	}
-	return false
 }

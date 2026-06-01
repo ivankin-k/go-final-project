@@ -82,7 +82,6 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 		newTask *db.Task
 	)
 	newTask = &db.Task{}
-	defer r.Body.Close()
 	if err = json.NewDecoder(r.Body).Decode(newTask); err != nil {
 		writeError(w, err.Error(), http.StatusBadRequest)
 		return
@@ -116,7 +115,6 @@ func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
 		task *db.Task
 	)
 	task = &db.Task{}
-	defer r.Body.Close()
 	if err = json.NewDecoder(r.Body).Decode(task); err != nil {
 		writeError(w, err.Error(), http.StatusBadRequest)
 		return
@@ -145,7 +143,7 @@ func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, struct{}{})
+	writeJSON(w, &struct{}{})
 }
 
 func getTasksHandler(w http.ResponseWriter, r *http.Request) {
@@ -254,7 +252,7 @@ func markDoneHandler(w http.ResponseWriter, r *http.Request) {
 			writeError(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		writeJSON(w, struct{}{})
+		writeJSON(w, &struct{}{})
 		return
 	}
 
@@ -273,7 +271,7 @@ func markDoneHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, struct{}{})
+	writeJSON(w, &struct{}{})
 }
 
 func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
@@ -297,5 +295,5 @@ func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, struct{}{})
+	writeJSON(w, &struct{}{})
 }

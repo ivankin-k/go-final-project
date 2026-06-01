@@ -9,6 +9,14 @@ import (
 	"time"
 )
 
+// Compare dates
+func after(a, b time.Time) bool {
+	if a.Truncate(24 * time.Hour).After(b.Truncate(24 * time.Hour)) {
+		return true
+	}
+	return false
+}
+
 func nextDateYear(now, dstart time.Time) time.Time {
 	for {
 		dstart = dstart.AddDate(1, 0, 0)

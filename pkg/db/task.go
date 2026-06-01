@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 )
 
 type Task struct {
@@ -76,6 +77,10 @@ func GetTasks(limit int, date, search string) ([]*Task, error) {
 		tasks = append(tasks, &task)
 	}
 
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return tasks, nil
 }
 
@@ -91,7 +96,7 @@ func GetTask(id int64) (*Task, error) {
 	task = Task{}
 	if err = DB.QueryRow(query, sql.Named("id", id)).Scan(&task.ID, &task.Date, &task.Title, &task.Comment, &task.Repeat); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &TaskNotFoundError{id: id}
+			return nil, fmt.Errorf("Failed to get task with ID=%d: %w", id, ErrTaskNotFound)
 		}
 		return nil, err
 	}
@@ -126,7 +131,7 @@ func UpdateTask(id int64, task *Task) error {
 	}
 
 	if count == 0 {
-		return &TaskNotFoundError{id: id}
+		return fmt.Errorf("Failed to update task with ID=%d: %w", id, ErrTaskNotFound)
 	}
 
 	return nil
@@ -150,7 +155,7 @@ func UpdateDate(id int64, date string) error {
 		return err
 	}
 	if count == 0 {
-		return &TaskNotFoundError{id: id}
+		return fmt.Errorf("Failed to update date for task with ID=%d: %w", id, ErrTaskNotFound)
 	}
 	return nil
 }
@@ -172,7 +177,7 @@ func DeleteTask(id int64) error {
 		return err
 	}
 	if count == 0 {
-		return &TaskNotFoundError{id: id}
+		return fmt.Errorf("Failed to delete task with ID=%d: %w", id, ErrTaskNotFound)
 	}
 
 	return nil

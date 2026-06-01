@@ -1,13 +1,5 @@
 package db
 
-import "fmt"
+import "errors"
 
-var ErrTaskNotFound = &TaskNotFoundError{}
-
-type TaskNotFoundError struct {
-	id int64
-}
-
-func (err *TaskNotFoundError) Error() string {
-	return fmt.Sprintf("No task found with ID=%d", err.id)
-}
+var ErrTaskNotFound = errors.New("Task not found")

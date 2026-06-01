@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 
@@ -36,7 +37,7 @@ func todoDBFile() string {
 	return dbFile
 }
 
-func init() {
+func Connect() error {
 	var (
 		installDB bool
 		err       error
@@ -51,7 +52,7 @@ func init() {
 
 	// Open DB file
 	if DB, err = sql.Open("sqlite", dbFile); err != nil {
-		log.Fatalf("Can't open DB (%s):\n%v\n", dbFile, err)
+		return fmt.Errorf("Can't open DB (%s):\n%v\n", dbFile, err)
 	}
 
 	log.Printf("DB opened (%s)", dbFile)
@@ -59,8 +60,10 @@ func init() {
 	// InstallDB if needed
 	if installDB {
 		if _, err = DB.Exec(schema); err != nil {
-			log.Fatalf("Can't install DB, exec schema (%s):\n%v\n", dbFile, err)
+			return fmt.Errorf("Can't install DB, exec schema (%s):\n%v\n", dbFile, err)
 		}
 		log.Print("DB schema installed successfully")
 	}
+
+	return nil
 }

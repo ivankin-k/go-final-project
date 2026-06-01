@@ -32,7 +32,6 @@ func signInHandler(w http.ResponseWriter, r *http.Request) {
 		req authRequest
 	)
 
-	defer r.Body.Close()
 	if err = json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, `Invalid auth request (JSON with "password" field is expected)`, http.StatusBadRequest)
 		return

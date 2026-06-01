@@ -8,9 +8,13 @@ import (
 )
 
 func main() {
+	var err error
+
 	defer db.DB.Close()
 
-	if err := server.Run(); err != nil {
-		log.Fatal(err)
+	if err = db.Connect(); err != nil {
+		log.Print(err)
+	} else if err := server.Run(); err != nil {
+		log.Print(err)
 	}
 }
